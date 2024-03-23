@@ -1,0 +1,44 @@
+{
+  "name": "payout-service",
+  "version": "1.0.0",
+  "description": "Payout service",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./bin/www",
+    "start": "node ./bin/www",
+    "test": "jest --runInBand --coverage"
+  },
+  "keywords": [
+    "payment"
+  ],
+  "author": "Olajuwon lawal",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
+    "debug": "^4.3.4",
+    "express": "^4.19.1",
+    "express-async-errors": "^3.1.1",
+    "helmet": "^7.1.0",
+    "http-errors": "^2.0.0",
+    "jade": "^1.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "logger": "^0.0.1",
+    "moment": "^2.30.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.1"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["json", "html"]
+}
+}
