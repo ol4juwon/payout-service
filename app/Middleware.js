@@ -26,10 +26,8 @@ exports.validateToken  = async (req,res,next) => {
 
     let token = req.headers['authorization'];
     token = token.split(" ")[1];
-    console.log({token})
     try{
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log({decoded})
 
     req.user = decoded;
     }catch(err){
@@ -39,3 +37,19 @@ exports.validateToken  = async (req,res,next) => {
     next();
 
 }
+exports.checkPermission = (role) => {
+    return async (req, res, next) => {
+      try {
+        const userRole = req.user.role;
+        if(userRole == null) return createErrorResponse(res,"Forbidden", 403)
+        if (!role.includes(userRole)) {
+          return createErrorResponse(res, "You don't have the right privileges" ,403);
+        }
+  
+        next();
+      } catch (error) {
+        logger.error(error);
+        return createErrorResponse(res, "internal Server Error", 500)
+      }
+    };
+  };

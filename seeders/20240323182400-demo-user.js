@@ -1,7 +1,7 @@
 'use strict';
 const db = require("../models/");
 const Users = db.Users;
-const { ROLES } = require('../Constants');
+const { ROLES, USER } = require('../Constants');
 const bcrypt = require("bcryptjs");
 const { faker } = require("@faker-js/faker");
 /** @type {import('sequelize-cli').Migration} */
@@ -24,7 +24,7 @@ module.exports = {
     // id: faker.string.uuid(),
     firstName:"Ola",
     lastName:"Juwon",
-    role:"ADMIN",
+    role:USER.ROLES.ADMIN,
     password:hashedPassword ,
     email: "olajuwonlawal2012@gmail.com",
     isVerified:true,
@@ -38,7 +38,7 @@ module.exports = {
     // id: faker.string.uuid(),
     firstName:"Ola",
     lastName:"Juwon",
-    role:"ADMIN",
+    role:USER.ROLES.USER,
     password:hashedPassword ,
     email: "olajuwonlawal20121@gmail.com",
     isVerified:true,

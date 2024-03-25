@@ -1,5 +1,5 @@
 "use strict";
-const sequelize = require("sequelize");
+const { Sequelize } = require("sequelize");
 const db = require("../../../models/");
 const Users = db.Users;
 
@@ -15,33 +15,34 @@ exports.getUsers = async (
   page = 1,
   limit = 10,
   orderBy = "createdAt",
-  sort = "DESC"
+  dir = "DESC"
 ) => {
   try {
     const data = await Users.findAll({
-      where: {},
-    //   order: sequelize.literal(`createdAt ${sort}`),
       offset: (page-1)* limit,
-      limit
+      limit,
+      order: Sequelize.literal(`${orderBy} ${dir}`)
     });
-    return { data };
+    return { data , code: 200};
   } catch (err) {
-    return { error: err.message };
+    return { error: err.message, code:500 };
   }
 };
 
 /**
  * 
  * @param {*} userId 
- * @returns 
+ * @returns ERROR|DATA
  */
 exports.getOneUser = async (userId) => {
     try{
-        const data  = await Users.findOne({where:{
-            id: userId
-        }})
-        return {data};
+        const data  = await Users.findByPk(userId
+        )
+        if(data == null){
+          return {error: "not found", code: 404}
+        }
+        return {data, code: 200};
     }catch(err){
-    return { error: err.message };
+    return { error: err.message, code: 500 };
     }
 }
