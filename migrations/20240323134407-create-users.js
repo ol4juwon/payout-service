@@ -17,28 +17,41 @@ module.exports = {
         },
         firstName: {
           type: Sequelize.STRING,
+          allowNull: false
         },
         lastName: {
           type: Sequelize.STRING,
+          allowNull: false
+
         },
         email: {
           type: Sequelize.STRING,
           unique: true,
+          allowNull: false
+
         },
         password: {
           type: Sequelize.STRING,
+          allowNull: false
+
         },
         isVerified: {
           type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
         },
         lastLogin: {
           type: Sequelize.DATE,
         },
         blacklisted: {
           type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
         },
         locked: {
           type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
         },
         verificationStatus: {
           type: Sequelize.DataTypes.ENUM("PENDING","PROCESSING","FAILED","SUCCESSFUL","INCOMPLETE"),

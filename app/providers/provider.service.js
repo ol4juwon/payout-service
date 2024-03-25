@@ -21,17 +21,19 @@ exports.getSingleProvider = async (providerId) => {
   }
 };
 
-exports.addProvider = async ({ name, slug, description, value }) => {
+exports.addProvider = async ({ name, slug, description, value,active }) => {
   try {
     const provider = await Providers.create({
       name,
       slug,
       description,
       value,
+      active: active? active: true, 
     });
     return { data: provider, code: 201 };
   } catch (err) {
-    return { error: err.message, code: 422 };
+    console.log({err: err.errors[0].message},)
+    return { error: err.errors[0].message || err.message, code: 500 };
   }
 };
 
