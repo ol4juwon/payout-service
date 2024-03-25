@@ -10,17 +10,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Users.hasMany(models.Transactions, { foreignKey: 'userId' });
     }
   }
   Users.init({
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
-    username: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    isActive: DataTypes.BOOLEAN,
-    lastLogin: DataTypes.DATE
+    isVerified: DataTypes.BOOLEAN,
+    verificationStatus:DataTypes.ENUM("PENDING","PROCESSING","FAILED","SUCCESSFUL","INCOMPLETE"),
+    lastLogin: DataTypes.DATE,
+    blacklisted: DataTypes.BOOLEAN,
+    locked: DataTypes.BOOLEAN,
+    retries: DataTypes.INTEGER,
+    role:DataTypes.ENUM("SUPER_ADMIN","ADMIN","USER")
+
   }, {
     sequelize,
     modelName: 'Users',

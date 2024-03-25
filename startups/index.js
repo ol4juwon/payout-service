@@ -6,8 +6,9 @@ module.exports = (app, express) => {
   require("./middleware")(app, express);
 
   // database connection
-//   require("./database");
+  require("./database");
 
+  // require("./seeder")()
 
 
 };

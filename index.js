@@ -6,7 +6,7 @@ const logger = require('morgan');
 let express = require('express');
 let app = express();
 const moment = require("moment");
-
+require('./app/helpers')
 
 global.isProduction = process.env.NODE_ENV == "production";
 
@@ -41,7 +41,7 @@ app.use((req, res, next) => {
         console.log("Response", requestId);
         console.log("Time Ended", moment().toISOString(true));
         cleanup();
-        graylog.debug( `[${requestId}] Response ${url}`,`${res.statusCode} ${res.statusMessage};`, {
+        logger( `[${requestId}] Response ${url}`,`${res.statusCode} ${res.statusMessage};`, {
             type: "request-response",
             body: req.body,
             query: req.query,

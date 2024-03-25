@@ -1,16 +1,30 @@
-const db = require("../../../models")
-
+const { faker } = require('@faker-js/faker');
+const userService =  require( "../../../app/v1/users/users.service");
 describe('User tests', () => {
 
-    let pgDb = db;
     beforeAll(async  () => {
-        await pgDb.sequelize.sync({force:true})
+
+
+    
     })
 
-    it('test with valid data', () => {
-        
+    it('get all users',  async () => {
+       await userService.getUsers().then((res)=>{
+            expect(res).toBeTruthy();
+            // console.log(typeof res.data, res?.data);
+            expect(typeof res.data).toBe('object')
+        })
     });
+    it('get One user', async () =>{
+        const id = faker.string.uuid();
+        await userService.getOneUser(id).then(res => {
+            expect(res).toBeTruthy();
+            // console.log(typeof res.data, res?.data);
+            // expect(typeof res.data).toBe('object')
+        }).catch();
+    })
+
     afterAll(async () => {
-        await pgDb.sequelize.close()
+        // await pgDb.sequelize.close()
       })
 });

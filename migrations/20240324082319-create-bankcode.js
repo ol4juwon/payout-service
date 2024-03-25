@@ -2,33 +2,30 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('Bankcodes', {
       id: {
         allowNull: false,
+        autoIncrement: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        defaultValue:Sequelize.literal('gen_random_uuid()')
       },
-      firstName: {
+      bank_name: {
+        type: Sequelize.STRING,
+        allowNull:false
+      },
+      bank_code: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      spay_code: {
         type: Sequelize.STRING
       },
-      lastName: {
+      squad_code: {
         type: Sequelize.STRING
       },
-      username: {
+      slug: {
         type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      password: {
-        type: Sequelize.STRING
-      },
-      isActive: {
-        type: Sequelize.BOOLEAN
-      },
-      lastLogin: {
-        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -38,9 +35,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    },{
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('Bankcodes');
   }
 };
