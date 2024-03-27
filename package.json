@@ -7,11 +7,12 @@
     "dev": "nodemon ./bin/www",
     "start": "node ./bin/www",
     "test": "cross-env NODE_ENV=test jest --coverage",
-    "pretest": "cross-env NODE_ENV=test  npm run db:migrate && npm run seed:test",
+    "pretest": "cross-env NODE_ENV=test  npm run db:migrate:test && npm run seed:test",
     "seed:test": "cross-env NODE_ENV=test npx sequelize-cli db:seed:all",
-    "db:migrate": "cross-env NODE_ENV=test npx sequelize-cli db:migrate",
+    "db:migrate:test": "cross-env NODE_ENV=test npx sequelize-cli db:migrate",
     "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
-    "db:reset":"cross-env NODE_ENV=test npx sequelize-cli db:migrate:undo:all"
+    "db:reset:test":"cross-env NODE_ENV=test npx sequelize-cli db:migrate:undo:all",
+    "seed:dev": "cross-env NODE_ENV=development npx sequelize-cli db:seed:all"
   },
   "keywords": [
     "payment"

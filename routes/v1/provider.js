@@ -7,6 +7,6 @@ const router = require("express").Router();
 router.post("/",providerValidator.addProvider,providerController.addProvider);
 router.get("/", providerValidator.getProviders, providerController.getProviders);
 router.get("/:id", providerValidator.getSingleProvider, providerController.getSingleProvider);
-router.put("/toggleStatus/:id",checkPermission(USER.ROLES.SUPER_ADMIN,USER.ROLES.ADMIN), providerValidator.toggleProvider, providerController.toggleProviderStatus);
-router.put("/setDefault/:id",checkPermission(USER.ROLES.SUPER_ADMIN,USER.ROLES.ADMIN), providerController.setDefault);
+router.patch("/:id/toggleStatus",checkPermission(USER.ROLES.SUPER_ADMIN,USER.ROLES.ADMIN), providerValidator.toggleProvider, providerController.toggleProviderStatus);
+router.patch("/:id/setDefault/",checkPermission(USER.ROLES.SUPER_ADMIN,USER.ROLES.ADMIN), providerController.setDefault);
 module.exports = router;

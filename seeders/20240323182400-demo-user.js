@@ -47,9 +47,7 @@ module.exports = {
     createdAt: new Date(),
     updatedAt: new Date()
    }
-  ], {
-    schema:"core"
-  })
+  ],{})
   },
 
   async down (queryInterface, Sequelize) {

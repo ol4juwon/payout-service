@@ -5,15 +5,11 @@ exports.validateClient = async (req,res,next) => {
     try{
         let accessKey = req.headers['x-access-token'];
         if (!accessKey) return createErrorResponse(res,"You are not authorised to use this service", 403);
-        // if (accessKey.startsWith('Bearer ')) {
-        //     // Remove Bearer from string
-        //     clientId = clientId.slice(7, clientId.length);
-        // }
       
         if(ACCESSKEY !== accessKey)
             return createErrorResponse(res, "You are not authorised to use this service", 401);
 
-        res.accessKey = req.body.accessKey = req.query.accessKey =accessKey;
+        res.accessKey =accessKey;
         require("axios").defaults.headers.common["accessKey"] = accessKey;
         return next();
     }catch (e) {
@@ -40,12 +36,13 @@ exports.validateToken  = async (req,res,next) => {
 exports.checkPermission = (role) => {
     return async (req, res, next) => {
       try {
+        
         const userRole = req.user.role;
         if(userRole == null) return createErrorResponse(res,"Forbidden", 403)
         if (!role.includes(userRole)) {
           return createErrorResponse(res, "You don't have the right privileges" ,403);
         }
-  
+        console.log("dddd", userRole);
         next();
       } catch (error) {
         logger.error(error);

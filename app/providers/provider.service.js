@@ -1,14 +1,30 @@
 "use strict";
 const db = require("../../models");
 const Providers = db.Providers;
-exports.getProviders = async (page = 1, limit = 10) => {
+/**
+ * 
+ * @param {number, number, boolean| null, boolean | null} queryParams 
+ * @returns 
+ */
+exports.getProviders = async ({page = 1, limit = 10, active= null, isDefault=null}) => {
   const offset = (page - 1) * limit;
+  let where = {};
+  if(active !== null) {
+    where.active = active;
+  }
+  if(isDefault !== null) where.isDefault = isDefault;
   const providers = await Providers.findAll({
+    where,
     offset,
     limit: limit,
   });
   return { data: providers, code: 200 };
 };
+/**
+ * 
+ * @param {uuid} providerId 
+ * @returns 
+ */
 exports.getSingleProvider = async (providerId) => {
   try {
     const provider = await Providers.findByPk(providerId);
@@ -21,6 +37,11 @@ exports.getSingleProvider = async (providerId) => {
   }
 };
 
+/**
+ * 
+ * @param {string, string, string, string, boolean} Provider 
+ * @returns 
+ */
 exports.addProvider = async ({ name, slug, description, value,active }) => {
   try {
     const provider = await Providers.create({
@@ -36,11 +57,16 @@ exports.addProvider = async ({ name, slug, description, value,active }) => {
     return { error: err.errors[0].message || err.message, code: 500 };
   }
 };
-
+/**
+ * 
+ * @param {uuid} id 
+ * @param {boolean} toggle 
+ * @returns 
+ */
 exports.toggleActive = async (id, toggle) => {
   try {
     const provider = await Providers.findByPk(id);
-    console.log("Provider found", {provider})
+    // console.log("Provider found", {provider})
     if(provider == null)
         return {error: `provider with ${id} not found`, code: 404};
 
@@ -60,20 +86,14 @@ exports.toggleActive = async (id, toggle) => {
   }
 };
 
-exports.activeProviders = async (page = 1, limit = 10) => {
-  const offset = (page - 1) * limit;
-  const providers = await Providers.findAll({
-    where: {
-      active: true,
-    },
-    offset,
-    limit: limit,
-  });
-  return { data: providers, code: 200 };
-};
-
+/**
+ * 
+ * @param {uuid} providerId 
+ * @returns 
+ */
 exports.setDefault = async (providerId) => {
-     await Providers.update({isDefault: false},{returning: true, where: {isDefault: true}}).then(([row, [updated]]) => updated);
+      await Providers.update({isDefault: false},{returning: true, where: {isDefault: true}}).then(([row, [updated]]) => updated);
+
     const newDefault = await Providers.update({isDefault: true},{where: {id: providerId}, returning: true}).then(([row, [updated]]) => updated)
     return {data: newDefault};
 }

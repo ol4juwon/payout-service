@@ -19,7 +19,24 @@ exports.getProviders = async (req, res, next) => {
 
   return next();
 };
-exports.getSingleProvider = async (req, res, next) => {};
+exports.getSingleProvider = async (req, res, next) => {
+  const schema = {
+    id: Joi.string().required(),
+  };
+  const result = Joi.validate(req.params, schema, {
+    allowUnknown: true,
+  });
+
+  if (result.error) {
+    return createErrorResponse(
+      res,
+      result.error.details[0].message.replace(/['"]/g, ""),
+      422
+    );
+  }
+
+  return next();
+};
 
 exports.addProvider = async (req, res, next) => {
   const schema = {
@@ -51,7 +68,7 @@ exports.toggleProvider = async (req, res, next) => {
   const result = Joi.validate(req.body, schema, {
     allowUnknown: false,
   });
-
+console.log("Validation error", req.body,)
   if (result.error)
     return createErrorResponse(
       res,

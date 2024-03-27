@@ -16,6 +16,7 @@ describe('Provider Unit tests', () => {
     });
     it('Create with exist provider details', async() =>{
         await providerService.addProvider(payload).then(res => {
+            console.log({res})
             expect(res.code).toBe(422);
         })
     })
@@ -47,7 +48,7 @@ describe('Provider Unit tests', () => {
         })
     })
     it('get all active providers', async () => {
-        await providerService.activeProviders(1, 10).then(res=>{
+        await providerService.getProviders({active: true}).then(res=>{
             expect(res.data.length).toBeGreaterThan(0);
             expect(res.data[0].active).toBeTruthy();
         })
