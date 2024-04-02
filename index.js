@@ -6,6 +6,7 @@ const logger = require('morgan');
 let express = require('express');
 let app = express();
 const moment = require("moment");
+const { validateClient } = require("./app/Middleware");
 require('./app/helpers')
 
 global.isProduction = process.env.NODE_ENV == "production";
@@ -16,7 +17,7 @@ require("express-async-errors");
 require("./startups")(app, express);
 
 logger("logger");
-
+app.use(validateClient)
 app.use((req, res, next) => {
     let requestId = getTimestamp();
     console.log("Time  Started", moment().toISOString(true), "headers", req.headers);

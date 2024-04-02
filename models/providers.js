@@ -11,13 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Providers.belongsTo(models.Users, {foreignKey: 'createdBy',})
     }
   }
   Providers.init({
     name: DataTypes.STRING,
     slug: DataTypes.STRING,
     active: DataTypes.BOOLEAN,
+    bankcode: DataTypes.STRING,
     isDefault: DataTypes.BOOLEAN,
+    createdBy: DataTypes.UUID,
     description: DataTypes.STRING,
     value: DataTypes.STRING,
     isDeleted: DataTypes.BOOLEAN

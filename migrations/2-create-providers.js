@@ -23,6 +23,14 @@ module.exports = {
         unique: true,
         allowNull: false
       },
+      createdBy:{
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id' 
+        },
+      },
       active: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
@@ -32,6 +40,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false
+      },
+      bankcode: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       description: {
         type: Sequelize.STRING,

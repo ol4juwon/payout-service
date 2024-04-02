@@ -25,12 +25,13 @@ describe("Authentication tests", () => {
 
 
   it("login correct email wrong  password details", async () => {
-    // const id = faker.string.uuid();
     await authService.login({email: "olajuwonlawal20121@gmail.com", password:"sssw"}).then(res => {
+     
         expect(res).toBeTruthy();
         expect(res).toHaveProperty("code", 401)
     })
     await authService.login({email: "olajuwonlawal20121@gmail.com", password:"sssw"}).then(res => {
+      console.log(res)
         expect(res).toBeTruthy();
         expect(res).toHaveProperty("code", 401)
     })

@@ -1,4 +1,8 @@
 module.exports = {
+  CURRENCY: {
+    NGN: "NGN",
+    USD: "USD",
+  },
   USER: {
     VERIFICATION_STATUS: {
       PENDING: "PENDING",

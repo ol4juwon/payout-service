@@ -33,19 +33,22 @@ exports.getSingleProvider = async (req, res) => {
 
 exports.addProvider = async ({ body }, res) => {
   try {
-    const { name, slug, description, value, active } = body;
+    const { name, slug, description, value, active, createdBy, bankcode } = body;
+    console.log({ name, slug, description, value, active, createdBy, bankcode } )
     const { error, data, code } = await providerService.addProvider({
       name,
       slug,
       description,
       value,
       active,
+      createdBy,
+      bankcode
     });
     if (error) return createErrorResponse(res, error, code);
 
     return createSuccessResponse(res, data, code || 201);
   } catch (err) {
-    console.log("48 => Provider Error:  ", err?.message, err?.cause, err?.stacktrace);
+    console.log("49 => Provider Error:  ", err, err?.cause, err?.stacktrace);
     return createErrorResponse(res, err.message, 500);
   }
 };

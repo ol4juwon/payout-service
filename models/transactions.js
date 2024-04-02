@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, Sequelize
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Transactions extends Model {
@@ -11,18 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // Transactions.belongsTo(models.Users, { foreignKey: 'userId' });
+      Transactions.belongsTo(models.Users, { foreignKey: 'senderId' });
+      Transactions.belongsTo(models.Beneficiaries, {foreignKey: 'beneficiary'})
+      Transactions.belongsTo(models.Providers, {foreignKey: 'provider'})
     }
   }
   Transactions.init({
-    recipientbankCode: DataTypes.STRING,
+    beneficiary: DataTypes.UUID,
     amount: DataTypes.DOUBLE,
     status: DataTypes.ENUM("PENDING","PROCESSING","FAILED","SUCCESSFUL"),
-    recipientAccountNo: DataTypes.STRING,
-    recipientName: DataTypes.STRING,
-    sender: DataTypes.STRING,
-    userId:DataTypes.STRING,
-    channel: DataTypes.ENUM("SPAY","SQUAD"),
+    senderId:DataTypes.UUID,
+    provider: DataTypes.UUID,
     narration: DataTypes.STRING
   }, {
     sequelize,

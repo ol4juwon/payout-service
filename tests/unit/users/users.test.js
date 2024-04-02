@@ -3,9 +3,6 @@ const userService =  require( "../../../app/v1/users/users.service");
 describe('User tests', () => {
 
     beforeAll(async  () => {
-
-
-    
     })
 
     it('get all users',  async () => {

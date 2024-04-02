@@ -3,10 +3,13 @@
 const { USER } = require("../Constants");
 const db = require("../models");
 const Users = db.Users;
+const SpayBankcode = db.SpayBankCodes;
 const { faker } = require('@faker-js/faker');
 const bcrypt = require("bcryptjs");
+const SpayService = require("../services/SpayService")
 module.exports = async () => {
-  await seedService();
+  // await seedService();
+  // await seedSpayBankCode();
 };
 
 let seedService = async () => {
@@ -37,3 +40,4 @@ let seedService = async () => {
     console.log(err.message);
   }
 };
+

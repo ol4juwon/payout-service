@@ -45,15 +45,17 @@ exports.addProvider = async (req, res, next) => {
     description: Joi.string().required(),
     value: Joi.string().required(),
     active: Joi.boolean(),
+    createdBy:Joi.string().required()
   };
   const result = Joi.validate(req.body, schema, {
-    allowUnknown: true,
+    allowUnknown: false,
   });
 
   if (result.error) {
+    console.log({result})
     return createErrorResponse(
       res,
-      result.error.details[0].message.replace(/['"]/g, ""),
+      result.error?.details[0]?.message.replace(/['"]/g, ""),
       422
     );
   }

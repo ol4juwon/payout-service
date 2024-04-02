@@ -1,7 +1,7 @@
 const { faker } = require("@faker-js/faker");
 const providerService = require("../../../app/providers/provider.service");
 const slug = faker.company.buzzNoun();
-const payload = {id:faker.string.uuid(),name: faker.string.alpha(),slug,value:slug, description: faker.string.alpha(100)}
+const payload = {id:faker.string.uuid(),name: faker.string.alpha(),slug,value:slug, createdBy: "ad795f13-7b56-4933-8b6d-ac9da2db4b40", description: faker.string.alpha(100)}
 
 describe('Provider Unit tests', () => { 
     beforeAll(async  () => {
@@ -12,11 +12,18 @@ describe('Provider Unit tests', () => {
         // console.log("===>",{payload},"\n\n\n\n")
         await providerService.addProvider(payload).then(res => {
             expect(res.code).toBe(201);
+            expect(res.data.createdBy).toBeTruthy();
+        })
+    });
+    it('Create with incomplete details', async () => {
+        const modPayload = payload;
+        delete modPayload.createdBy;
+        await providerService.addProvider(modPayload).then(res => {
+            expect(res.code).toBe(422);
         })
     });
     it('Create with exist provider details', async() =>{
         await providerService.addProvider(payload).then(res => {
-            console.log({res})
             expect(res.code).toBe(422);
         })
     })
@@ -28,8 +35,7 @@ describe('Provider Unit tests', () => {
         })
     })
     it('get valid  provider', async () => {
-        await providerService.getSingleProvider('ad795f13-7b56-4933-8b6d-ac9da2db4b40').then(res =>{
-            // expect(res).toHaveProperty(data);
+        await providerService.getSingleProvider('8ecc79ce-2762-4525-9187-b8ed56624a2c').then(res =>{
             expect(res.code).toEqual(200);
             expect(res.data).toHaveProperty("id");
         })
@@ -54,19 +60,19 @@ describe('Provider Unit tests', () => {
         })
     })
     it('deactivate provider', async () =>{
-        await providerService.toggleActive('ad795f13-7b56-4933-8b6d-ac9da2db4b40', false).then(res =>{
+        await providerService.toggleActive('8ecc79ce-2762-4525-9187-b8ed56624a2c', false).then(res =>{
             expect(res).toHaveProperty("data")
             expect(res.data).toHaveProperty("active", false)
         })
     })
     it('deactivate  already disabled provider', async () =>{
-        await providerService.toggleActive('ad795f13-7b56-4933-8b6d-ac9da2db4b40', false).then(res =>{
+        await providerService.toggleActive('8ecc79ce-2762-4525-9187-b8ed56624a2c', false).then(res =>{
             expect(res).toHaveProperty("error")
             expect(res.code).toBe(422)
         })
     })
     it('activate provider', async () =>{
-        await providerService.toggleActive('ad795f13-7b56-4933-8b6d-ac9da2db4b40', true).then(res =>{
+        await providerService.toggleActive('8ecc79ce-2762-4525-9187-b8ed56624a2c', true).then(res =>{
             expect(res).toHaveProperty("data")
             expect(res.data).toHaveProperty("active", true)
         })
@@ -82,12 +88,11 @@ describe('Provider Unit tests', () => {
     it('activate provider with invalid uuid', async () =>{
         await providerService.toggleActive(faker.string.uuid(), true).then(res =>{
             expect(res).toHaveProperty("error")
-            console.log({res})
             expect(res.code).toEqual(404)
         })
     })
     it('setDefault provider', async () =>{
-        await providerService.setDefault('ad795f13-7b56-4933-8b6d-ac9da2db4b40').then(res =>{
+        await providerService.setDefault('8ecc79ce-2762-4525-9187-b8ed56624a2c').then(res =>{
             expect(res).toHaveProperty("data")
             expect(res.data).toHaveProperty("isDefault", true)
         })

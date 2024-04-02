@@ -7,13 +7,18 @@ const jwt = require("jsonwebtoken");
 
 exports.login = async ({ email, password }) => {
   try {
-    const user = await Users.findOne({ where: { email } });
+   
+    const user = await Users.scope("password").findOne({ where: { email } });
+
     if (user) {
+      console.log(password, user.password)
       const validPass = await bcrypt.compare(password, user.password);
+      console.log("sss", validPass)
       if(user.locked){
         user.isLocked = true;
         return { error: "Account Locked", code: 403 };
     }
+ 
       if (validPass) {
         user.lastLogin = new Date();
         user.retries = 0;
@@ -27,7 +32,7 @@ exports.login = async ({ email, password }) => {
           verificationStatus: user.verificationStatus,
         },process.env.TOKEN_MINUTES);
         const refreshToken = await generatetoken({ _id: user.id,}, process.env.REFRESH_MINUTES)
-        return { data: {token, refreshToken}, code: 200 };
+        return { data: {passwordChanged:user.passwordChanged ,token, refreshToken}, code: 200 };
       } else {
         user.retries += 1;
      

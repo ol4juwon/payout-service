@@ -11,17 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Bankcode.belongsToMany(models.Beneficiaries,{through:"Beneficiaries_Bankcodes"})
     }
   }
   Bankcode.init({
-    bank_name: DataTypes.STRING,
-    bank_code: DataTypes.STRING,
-    spay_code: DataTypes.STRING,
-    squad_code: DataTypes.STRING,
+    bankName: DataTypes.STRING,
+    bankCode: DataTypes.STRING,
+    spayCode: DataTypes.STRING,
+    squadCode: DataTypes.STRING,
     slug: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Bankcode',
+    modelName: 'Bankcodes',
   });
   return Bankcode;
 };

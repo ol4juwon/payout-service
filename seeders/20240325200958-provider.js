@@ -10,11 +10,13 @@ module.exports = {
     
       */
        await queryInterface.bulkInsert('Providers', [{
-        id:  'ad795f13-7b56-4933-8b6d-ac9da2db4b40',
+        id:  '8ecc79ce-2762-4525-9187-b8ed56624a2c',
          name: 'SquadCo',
          slug:'squad',
          value: "squad",
+         bankcode: "000013",
          active: true, 
+         createdBy: "8ecc79ce-2762-4525-9187-b8ed56624a2c",
          isDefault: true,
          description: "Squad payment provider",
          createdAt:new Date(),

@@ -7,7 +7,7 @@ exports.validateClient = async (req,res,next) => {
         if (!accessKey) return createErrorResponse(res,"You are not authorised to use this service", 403);
       
         if(ACCESSKEY !== accessKey)
-            return createErrorResponse(res, "You are not authorised to use this service", 401);
+            return createErrorResponse(res, "x-aceess - You are not authorised to use this service", 401);
 
         res.accessKey =accessKey;
         require("axios").defaults.headers.common["accessKey"] = accessKey;
