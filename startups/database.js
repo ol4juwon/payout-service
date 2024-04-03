@@ -16,8 +16,8 @@ module.exports = new Sequelize( process.env.POSTGRES_DBNAME, process.env.POSTGRE
     }
     
 }).authenticate(console.log).then(() => {
-    console.log('Connection has been established successfully.');
+    // console.log('Connection has been established successfully.');
  }).catch((error) => {
-    console.error('Unable to connect to the database: ', error);
+    // console.error('Unable to connect to the database: ', error);
  });
 

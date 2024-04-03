@@ -10,11 +10,12 @@ const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
 let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+// if (config.use_env_variable) {
+//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
+// } else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config)
+
+// }
 // 
 fs
   .readdirSync(__dirname)
@@ -36,7 +37,11 @@ Object.keys(db).forEach(modelName => {
     db[modelName].associate(db);
   }
 });
-
+sequelize .authenticate(console.log).then(() => {
+  console.log('Connection has been established successfully.');
+}).catch((error) => {
+  console.error('Unable to connect to the database: ', error);
+});
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
