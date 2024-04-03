@@ -1,7 +1,7 @@
 const { faker } = require("@faker-js/faker");
 const providerService = require("../../../app/providers/provider.service");
 const slug = faker.company.buzzNoun();
-const payload = {id:faker.string.uuid(),name: faker.string.alpha(),slug,value:slug, createdBy: "ad795f13-7b56-4933-8b6d-ac9da2db4b40", description: faker.string.alpha(100)}
+const payload = {id:faker.string.uuid(),name: faker.string.alpha(),slug,value:slug,bankcode: "000001", createdBy: "8ecc79ce-2762-4525-9187-b8ed56624a2c", description: faker.string.alpha(100)}
 
 describe('Provider Unit tests', () => { 
     beforeAll(async  () => {
@@ -11,6 +11,7 @@ describe('Provider Unit tests', () => {
     it('Create a valid provider', async () => {
         // console.log("===>",{payload},"\n\n\n\n")
         await providerService.addProvider(payload).then(res => {
+            // console.log({response : res })
             expect(res.code).toBe(201);
             expect(res.data.createdBy).toBeTruthy();
         })
@@ -71,6 +72,12 @@ describe('Provider Unit tests', () => {
             expect(res.code).toBe(422)
         })
     })
+    it('deactivate  with invalid boolean', async () =>{
+        await providerService.toggleActive('8ecc79ce-2762-4525-9187-b8ed56624a2c', "dddd").then(res =>{
+            expect(res).toHaveProperty("error")
+            expect(res.code).toBe(500)
+        })
+    })
     it('activate provider', async () =>{
         await providerService.toggleActive('8ecc79ce-2762-4525-9187-b8ed56624a2c', true).then(res =>{
             expect(res).toHaveProperty("data")
@@ -95,6 +102,21 @@ describe('Provider Unit tests', () => {
         await providerService.setDefault('8ecc79ce-2762-4525-9187-b8ed56624a2c').then(res =>{
             expect(res).toHaveProperty("data")
             expect(res.data).toHaveProperty("isDefault", true)
+        })
+    })
+
+    it('setDefault provider invalid', async () =>{
+        await providerService.setDefault('cc79ce-2762-4525-9187-b8ed56624a2c').then(res =>{
+            expect(res).toHaveProperty("error")
+            expect(res.code).toBe(500)
+        })
+    })
+
+    it('setDefault provider invalid', async () =>{
+        const id = faker.string.uuid()
+        await providerService.setDefault(id).then(res =>{
+            expect(res).toHaveProperty("error")
+            expect(res.code).toBe(404)
         })
     })
     

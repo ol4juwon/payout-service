@@ -3,11 +3,12 @@ const providerService = require("./provider.service");
 
 exports.getProviders = async (req, res) => {
   try {
-    const { page, limit, isDefault, active } = req.query;
+    const { page, limit, isDefault, active, } = req.query;
     const { error, data, code } = await providerService.getProviders({
       page,
       limit,
       isDefault,
+      
       active,
     });
     if (error) return createErrorResponse(res, error, code);

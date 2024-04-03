@@ -3,7 +3,8 @@ const transactionController = require("../../app/v1/transactions/transactions.co
 const transactionValidator = require("../../app/v1/transactions/transactions.validator")
 const router = require("express").Router();
 router.get("/getBalance",transactionController.getWalletBalances);
-router.get("/",transactionController.getallTransactions);
+router.get("/",transactionValidator.getAll,transactionController.getallTransactions);
+router.post("/initiatePayouts",transactionValidator.approvePayout,transactionController.approvePayout);
 router.get("/getBalance",transactionController.getWalletBalances);
 router.post("/nameEnquiry",transactionValidator.validateAccount, transactionController.validateBank);
 module.exports = router;

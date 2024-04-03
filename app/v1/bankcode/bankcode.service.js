@@ -1,6 +1,6 @@
 "use strict";
 const db = require("../../../models/");
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 const Bankcodes = db.MappedBankCodes;
 const SqaudBankCodes = db.SqaudBankCodes;
 const SpayBank = db.SpayBankCodes;
@@ -15,7 +15,9 @@ exports.getBankCodes = async ({
     const offset = (page - 1) * limit;
     let bankCodes;
     if(all){
-      bankCodes = await Bankcodes.findAll();
+      bankCodes = await Bankcodes.findAll({
+        order: Sequelize.literal(`"${orderBy}" ${sort}`),
+      });
     }else{
      bankCodes = await Bankcodes.findAll({
       limit: limit,
@@ -23,19 +25,21 @@ exports.getBankCodes = async ({
       order: Sequelize.literal(`"${orderBy}" ${sort}`),
     });
   }
-    if(bankCodes.error){
-      return {error: bankCodes.error, code: 400}
-    }
-    // console.log("dd",{bankCodes})
     return { data: bankCodes };
   } catch (err) {
-    // console.log({err})
-    console.log(err.message)
     return { error: err?.message || err, code: 400 };
   }
 };
 
 exports.getOneBankCode = async (id) => {
-  const bankCodes = await Bankcodes.findOne({ where: { id } });
-  return { data: bankCodes };
+  try{
+  const bankCodes = await Bankcodes.findByPk(id);
+  // console.log({bankCodes});
+  if(!bankCodes){
+    return {error: "Not found", code: 404}
+  }
+  return { data: bankCodes , code: 200};
+}catch(error){
+  return {error: "failed"+error.message ,code: 400}
+}
 };

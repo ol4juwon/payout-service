@@ -5,7 +5,8 @@
     "database": "payout_dev",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "useNativeUUID": true
+    "useNativeUUID": true,
+    "logging": false
   },
   "test": {
     "username": "postgres",
@@ -15,6 +16,7 @@
     "dialect": "postgres",
     "logging":false,
     "useNativeUUID": true
+    
   },
   "production": {
     "username": "postgres",
@@ -22,6 +24,7 @@
     "database": "payout_dev",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "useNativeUUID": true
+    "useNativeUUID": true,
+    "logging": false
   }
 }

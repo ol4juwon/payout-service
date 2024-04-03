@@ -21,7 +21,7 @@ module.exports = {
          description: "Squad payment provider",
          createdAt:new Date(),
          updatedAt: new Date()
-       }], {});
+       },], {});
   },
 
   async down (queryInterface, Sequelize) {

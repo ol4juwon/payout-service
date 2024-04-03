@@ -7,8 +7,8 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const sterlingData = await SpayBankCodes.findAll();
     const gtbData = await SquadBankCodes.findAll();
-console.log(sterlingData.length);
-console.log(gtbData.length);
+// console.log(sterlingData.length);
+// console.log(gtbData.length);
     const combinedData = [];
 
     sterlingData.forEach((sterling) => {

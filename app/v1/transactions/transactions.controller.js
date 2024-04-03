@@ -19,13 +19,13 @@ try{
     return createErrorResponse(res, err.message || err, 500)
 }
 }
-exports.approvePayout = async (req,res) => {
-    try{
+// exports.approvePayout = async (req,res) => {
+//     try{
 
-    }catch(err){
-        return createErrorResponse(res, err.message || err, 500)
-    }
-}
+//     }catch(err){
+//         return createErrorResponse(res, err.message || err, 500)
+//     }
+// }
 
 exports.getallTransactions = async (req,res) =>{
     try{
@@ -38,6 +38,22 @@ exports.getallTransactions = async (req,res) =>{
 
         return createSuccessResponse(res, data, code || 200);
     }catch(err){
+        return createErrorResponse(res, err?.message || err, 500)
+    }
+}
+
+exports.approvePayout = async (req, res) => {
+    try{
+        const {amount,recipientId, narration} = req.body
+        // console.log("=========\n ",req.user)
+        const {error, data, code} = await transactionService.initiatePayout(req.user._id, {amount,recipientId, narration});
+        if(error){
+            return createErrorResponse(res, error, code|| 400);
+        }
+
+        return createSuccessResponse(res, data, code || 200);
+    }catch(err){
+        console.log("65 =>",err)
         return createErrorResponse(res, err?.message || err, 500)
     }
 }

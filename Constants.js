@@ -19,10 +19,10 @@ module.exports = {
   },
   TRANSACTION: {
     STATUS: {
-      SUCCESS: "success",
-      FAILED: "failed",
-      PENDING: "pending",
-      PROCESSING: "processing",
+      SUCCESS: "SUCCESSFUL",
+      FAILED: "FAILED",
+      PENDING: "PENDING",
+      PROCESSING: "PROCESSING",
     },
     CHANNEL: {
       SQUAD: "squad",

@@ -24,7 +24,7 @@ module.exports = {
       }
      ,
       amount: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       status: {
         type: Sequelize.ENUM("PENDING","PROCESSING","FAILED","SUCCESSFUL"),
@@ -44,7 +44,7 @@ module.exports = {
       },
       provider: {
         type: Sequelize.UUID,
-        allowNull:false,
+        allowNull:true,
         references: {
           model: 'Providers',
           key: 'id' 

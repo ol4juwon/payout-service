@@ -19,7 +19,8 @@ module.exports = {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash("Olajuwon001", salt);
     const user1 = "8ecc79ce-2762-4525-9187-b8ed56624a2c";
-    const user2 = faker.string.uuid();
+    const user2 = "b97f39df-2e43-4a70-8590-b7cbdb179ff6";
+    console.log({user2})
     await queryInterface.bulkInsert(
       "Users",
       [

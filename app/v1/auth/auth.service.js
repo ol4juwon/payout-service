@@ -11,9 +11,7 @@ exports.login = async ({ email, password }) => {
     const user = await Users.scope("password").findOne({ where: { email } });
 
     if (user) {
-      console.log(password, user.password)
       const validPass = await bcrypt.compare(password, user.password);
-      console.log("sss", validPass)
       if(user.locked){
         user.isLocked = true;
         return { error: "Account Locked", code: 403 };

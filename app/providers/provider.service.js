@@ -23,9 +23,8 @@ exports.getProviders = async ({
     where,
     offset,
     limit: limit,
-    include: [ {model: Users,attributes:["firstName", "lastName", "id"]}]
-  },
-  );
+    include: [{ model: Users, attributes: ["firstName", "lastName", "id"] }],
+  });
   return { data: providers, code: 200 };
 };
 /**
@@ -35,7 +34,9 @@ exports.getProviders = async ({
  */
 exports.getSingleProvider = async (providerId) => {
   try {
-    const provider = await Providers.findByPk(providerId,{include:  [ {model: Users,attributes:["firstName", "lastName", "id"]}]});
+    const provider = await Providers.findByPk(providerId, {
+      include: [{ model: Users, attributes: ["firstName", "lastName", "id"] }],
+    });
     if (provider != null) {
       return { data: provider, code: 200 };
     }
@@ -47,29 +48,41 @@ exports.getSingleProvider = async (providerId) => {
 
 /**
  *
- * @param {string, string, string, string, boolean} Provider
+ * @param {string, string, string, string, boolean, string, UUID} Provider
  * @returns
  */
-exports.addProvider = async ({ name, slug, description, value, active, createdBy }) => {
+exports.addProvider = async ({
+  name,
+  slug,
+  description,
+  value,
+  active,
+  bankcode,
+  createdBy,
+}) => {
   // try {
-    const provider = await Providers.create({
-      name,
-      createdBy,
-      slug,
-      description,
-      value,
-      active: active ? active : true,
-    })
-      .then((data) => data)
-      .catch((err) => {
-        return { error: err };
-      });
-      // console.log({provider: provider?.error})
-    if (provider?.error) {
-      return { error: provider?.error?.parent?.detail || provider.error, code: 422 };
-    }
-    return { data: provider, code: 201 };
-
+  const provider = await Providers.create({
+    name,
+    createdBy,
+    slug,
+    bankcode,
+    description,
+    value,
+    active: active ? active : true,
+  })
+    .then((data) => data)
+    .catch((err) => {
+      return { error: err };
+    });
+  // console.log({provider: provider?.error})
+  if (provider?.error) {
+    // console.log(provider.error)
+    return {
+      error: provider?.error?.parent?.detail || provider.error,
+      code: 422,
+    };
+  }
+  return { data: provider, code: 201 };
 };
 /**
  *
@@ -96,10 +109,9 @@ exports.toggleActive = async (id, toggle) => {
       { active: toggle },
       { returning: true, where: { id: id, active: !toggle } }
     ).then(([rows, [updatedProvider]]) => updatedProvider);
-    if (defaultProvider) {
+    // if (defaultProvider) {
       return { data: defaultProvider, code: 200 };
-    }
-    return { error: "Something went wrong", code: 400 };
+    // }
   } catch (err) {
     return { error: err.message, code: 500 };
   }
@@ -111,18 +123,21 @@ exports.toggleActive = async (id, toggle) => {
  * @returns
  */
 exports.setDefault = async (providerId) => {
+  try {
+    await Providers.update(
+      { isDefault: false },
+      { returning: true, where: { isDefault: true } }
+    ).then(([row, [updated]]) => updated);
 
-  await Providers.update(
-    { isDefault: false },
-    { returning: true, where: { isDefault: true } }
-  ).then(([row, [updated]]) => updated);
-
-  const newDefault = await Providers.update(
-    { isDefault: true },
-    { where: { id: providerId }, returning: true }
-  ).then(([row, [updated]]) => updated);
-  if(newDefault?.id == null){
-    return {error: "Provider doesnt exist", code: 404}
+    const newDefault = await Providers.update(
+      { isDefault: true },
+      { where: { id: providerId }, returning: true }
+    ).then(([row, [updated]]) => updated);
+    if (newDefault?.id == null) {
+      return { error: "Provider doesnt exist", code: 404 };
+    }
+    return { data: newDefault };
+  } catch (err) {
+    return { error: err?.message, code: 500 };
   }
-  return { data: newDefault };
 };
