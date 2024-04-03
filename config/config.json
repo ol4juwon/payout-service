@@ -19,12 +19,12 @@
     
   },
   "production": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "payout_dev",
-    "host": "127.0.0.1",
+    "username": "mlfchpbj",
+    "password": "S1O5sIs-KzaTh5brmaijAwXBpJKN6Nb8",
+    "database": "mlfchpbj",
+    "host": "manny.db.elephantsql.com",
     "dialect": "postgres",
     "useNativeUUID": true,
-    "logging": false
+    "logging": true
   }
 }
