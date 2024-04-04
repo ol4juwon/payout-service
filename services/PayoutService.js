@@ -2,12 +2,15 @@ const db = require("../models/");
 const Bankcodes = db.Bankcodes;
 const Transactions = db.Transactions;
 const MappedBankCodes = db.MappedBankCodes;
+const Users = db.Users;
+const Wallets = db.Wallets;
 // const
 const squadService = require("./SquadService");
 const spayService = require("./SpayService");
 const { CURRENCY, TRANSACTION } = require("../Constants");
 const Providers = db.Providers;
 const Beneficiaries = db.Beneficiaries;
+const payoutInterface = require("./interface");
 class PayoutService {
   constructor() {
     this.currency = CURRENCY.NGN;
@@ -33,7 +36,18 @@ class PayoutService {
           provider: null,
           narration,
         });
-        // console.log({ transaction });
+        const user = await Users.findByPk(recipientId, {include:[
+          {model: Wallets,as : "wallet"}
+        ]});
+
+        if(!user) {
+          return {error: "USer doesn't exist", code: 404}
+        }
+        
+        console.log({ user: user.wallet });
+        if(amount > user.wallet.balance){
+          return {error: "User doesn't have sufficient balance to process payout", code: 400}
+        }
         // Check balance of collection accounts
         const { balance } = await this.getBalances();
         // console.log({be : beneficiary.MappedBankCode})
@@ -43,30 +57,39 @@ class PayoutService {
           beneficiary,
           balance
         );
-        console.log({ optimizedProvider });
-        if(optimizedProvider.includes("Cannot")){
-          transaction.status = TRANSACTION.STATUS.FAILED
+        // console.log({ optimizedProvider });
+        if (optimizedProvider.includes("Cannot")) {
+          transaction.status = TRANSACTION.STATUS.FAILED;
           await transaction.save();
-          return {error: optimizedProvider}
+          return { error: optimizedProvider };
         }
-        const channel = await Providers.findOne({where: {slug:"squad"}})
+        const channel = await Providers.findOne({ where: { slug: "squad" } });
         // Initiate payout
-        console.log({channel})
-        transaction.provider = channel.id
-
-       const {error, data} =    await this.initiatePayout({amount , provider: optimizedProvider, beneficiary, transaction});
-            if(error) {
-             transaction.status = TRANSACTION.STATUS.FAILED;
-             await transaction.save();
-              return {error}
-            }
-          transaction.status = TRANSACTION.STATUS.SUCCESS;
+        // console.log({ channel });
+        transaction.provider = channel.id;
+        transaction.reference = "SKYBUUDDY"+transaction.id;
+        const { error, data } = await this.initiatePayout({
+          narration,
+          amount,
+          provider: optimizedProvider,
+          beneficiary,
+          transaction,
+        });
+        if (error) {
+          transaction.status = TRANSACTION.STATUS.FAILED;
           await transaction.save();
+          return { error };
+        }
+        transaction.status = TRANSACTION.STATUS.SUCCESS;
+        await transaction.save();
         return {
-          data: {message : "Payout approved and initiated successfully",transaction}
+          data: {
+            message: "Payout approved and initiated successfully",
+            transaction,
+          },
         };
       } else {
-        return { error: "Beneficiary hasn't been added for user" };
+        return { error: "User doesn't have a collection account set yet" };
       }
     } catch (error) {
       console.error("Error approving payout:", error);
@@ -97,8 +120,11 @@ class PayoutService {
         return TRANSACTION.CHANNEL.SPAY;
       }
     } else {
-      console.log("entered here")
-      if ((parseAmount + 25.25) >= minBalance && (parseAmount+25.25) < maxBalance) {
+      console.log("entered here");
+      if (
+        parseAmount + 25.25 >= minBalance &&
+        parseAmount + 25.25 < maxBalance
+      ) {
         return maxBalance === collectionBalance.spay
           ? TRANSACTION.CHANNEL.SQUAD
           : TRANSACTION.CHANNEL.SPAY;
@@ -107,8 +133,23 @@ class PayoutService {
 
     return `Cannot process payout. Please try an amount lower than NGN${maxBalance}`;
   }
-  async initiatePayout({amount,provider ,beneficiary}) {
-      return {data: "done"}   
+  async initiatePayout({ amount, provider, beneficiary, narration, transaction}) {
+    // console.log({ amount, provider, beneficiary, narration });
+    const { error, data, code } = await payoutInterface[
+      "squad"
+    ].ProcessTransfer({
+      narration,
+      bank_code: beneficiary.MappedBankCode.id,
+      bankCode: beneficiary.MappedBankCode.bankCode,
+      amount,
+      accountNo: beneficiary.accountNo,
+      reference: transaction.reference,
+    });
+    // if(error){
+    //   return {error: "Payout failed", code: 400}
+    // }
+    return { data: data, code };
+    // process with
   }
   async validateBank({ bankcode, accountNo }) {
     const { error, data } = await squadService.NameEnquiry({

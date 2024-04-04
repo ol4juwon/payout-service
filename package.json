@@ -15,7 +15,7 @@
     "db:create": "npx sequelize-cli db:create",
     "db:drop": "npx sequelize-cli db:drop",
     "db:reset:test": "cross-env NODE_ENV=test npx sequelize-cli db:migrate:undo:all",
-    "db:reset": "npx sequelize-cli db:migrate:undo:all",
+    "db:reset": "cross-env NODE_ENV=production npx sequelize-cli db:migrate:undo:all",
     "db:seed:dev": "cross-env NODE_ENV=production npx sequelize-cli db:seed:all"
   },
   "keywords": [

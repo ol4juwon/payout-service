@@ -27,22 +27,22 @@ class SpayService {
 
   async getBalance() {
     try {
-    //   const requestID = await nanoid();
-    // //   console.log({ requestID });
-    //   const requestJson = {
-    //     Referenceid: requestID,
-    //     RequestType: 151,
-    //     Translocation: "web",
-    //     NUBAN: "0089875279",
-    //   };
+      //   const requestID = await nanoid();
+      // //   console.log({ requestID });
+      //   const requestJson = {
+      //     Referenceid: requestID,
+      //     RequestType: 151,
+      //     Translocation: "web",
+      //     NUBAN: "0089875279",
+      //   };
 
-    //   const requestbody = await encryptData(
-    //     JSON.stringify(requestJson),
-    //     this.SPAY_BIN,
-    //     this.SPAY_IV
-    //   );
+      //   const requestbody = await encryptData(
+      //     JSON.stringify(requestJson),
+      //     this.SPAY_BIN,
+      //     this.SPAY_IV
+      //   );
       // console.log({requestbody: typeof requestbody});
-    //   const response = await this._axios.post("/BalanceEnquiry", requestbody);
+      //   const response = await this._axios.post("/BalanceEnquiry", requestbody);
       // console.log({response: response.data});
 
       return { data: 1000 };
@@ -79,15 +79,68 @@ class SpayService {
     }
   }
 
-  async NameEnquiryIntra({ accountNo }) {
+  async NameEnquiryIntra({ accountNo, bankcode }) {
     try {
       const requestID = await nanoid();
       console.log({ requestID });
+      let requestJson;
+
+      if (bankcode === "000001") {
+        requestJson = {
+          Referenceid: requestID,
+          RequestType: 219,
+          Translocation: "web",
+          NUBAN: accountNo,
+        };
+      
+      } else {
+        requestJson = {
+          Referenceid: requestID,
+          RequestType: 161,
+          Translocation: "web",
+          ToAccount: accountNo,
+          DestinationBankCode: bankcode,
+        };
+      }
+
+      console.log({ requestJson });
+      const requestbody = await encryptData(
+        JSON.stringify(requestJson),
+        this.SPAY_BIN,
+        this.SPAY_IV
+      );
+      // console.log({requestbody: typeof requestbody});
+      const path = bankcode === "000001" ? "/SBPNameEnquiry" : "/InterbankNameEnquiry"
+      const response = await this._axios.post(path, requestbody);
+      console.log({ response: response.data.data });
+      if (response.data.data.status != "00") {
+        return { error: "Inquiry failed" };
+      }
+      return { data: response?.data.data };
+    } catch (err) {
+      console.log(err.response.data);
+      // console.log(err)
+      return { error: err.message };
+    }
+  }
+
+  async ProcessTransfer({ accountNo, bankcode, amount, reference }) {
+    const NEResponse = await this.NameEnquiryIntra({ accountNo, bankcode });
+    try {
+      const requestID = nanoid();
+      console.log({ requestID });
       const requestJson = {
         Referenceid: requestID,
-        RequestType: 219,
+        SessionID: NEResponse.SessionID,
+        FromAccount: "0089875279",
+        ToAccount: accountNo,
+        Amount: amount,
+        DestinationBankCode: bankcode,
+        NEResponse: JSON.stringify(NEResponse),
+        BenefiName: NEResponse.BenefiName,
+        PaymentReference: reference,
+        RequestType: 162,
         Translocation: "web",
-        NUBAN: accountNo,
       };
 
       const requestbody = await encryptData(
@@ -96,7 +149,10 @@ class SpayService {
         this.SPAY_IV
       );
       // console.log({requestbody: typeof requestbody});
-      const response = await this._axios.post("/SBPNameEnquiry", requestbody);
+      const response = await this._axios.post(
+        "/InterbankTransferReq",
+        requestbody
+      );
       // console.log({response: response.data});
 
       return { data: JSON.parse(response?.data?.data.response) };

@@ -44,7 +44,7 @@ return next();
 exports.validateAccount = async (req,res, next) => {
         const schema  =  {
             accountNo: Joi.string().min(10).required(),
-            bankcode: Joi.string().guid().required()
+            bankcode: Joi.string().required()
         }
         const result = Joi.validate(req.body, schema, {
             allowUnknown: false

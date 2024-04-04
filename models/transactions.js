@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.ENUM("PENDING","PROCESSING","FAILED","SUCCESSFUL"),
     senderId:DataTypes.UUID,
     provider: DataTypes.UUID,
-    narration: DataTypes.STRING
+    narration: DataTypes.STRING,
+    reference: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Transactions',
