@@ -77,7 +77,33 @@ exports.getallTransactions = async ({
     return { error: error, code: 400 };
   }
 };
+exports.getUserTransactions= async (userId, {page=1, limit=100, orderBy="createdBy", sort="DESC"}) => {
+try{
+let transactions;
+transactions = await Transactions.findAll({
+    where: {beneficiary : userId},
+  offset: (page - 1) * limit,
+  limit,
+  orderBy: Sequelize.literal(`'${orderBy}' ${sort}`),
+  include: [
+    {
+      model: Beneficiaries,
+      attributes: ["id", "accountName", "accountNo"],
+      include: [
+        {
+          model: BankCodes,
+          attributes: ["bankName"],
+        },
+      ],
+    },
+  ],
 
+});
+return {data: transactions, code: 200}
+}catch(error){
+
+}
+}
 exports.initiatePayout = async (userId, payload) => {
   try {
     const { amount, recipientId, narration } = payload;

@@ -24,7 +24,7 @@ exports.login = async ({ email, password }) => {
         const token = await generatetoken({
           _id: user.id,
           email: user.email,
-
+          userData: user,
           isVerified: user.isVerified,
           role: user.role,
           verificationStatus: user.verificationStatus,
