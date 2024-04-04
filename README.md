@@ -1,4 +1,4 @@
-# ***PYOUT SERVICE API V1***
+# ***PAYOUT SERVICE API V1***
 
 ## Language and frameworks
 
@@ -6,7 +6,8 @@
 - Postgresql
 - Expressjs
 - Sequelize
--
+- Jest
+- Supertest
 
 ## Endpoints
 
