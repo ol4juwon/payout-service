@@ -10,13 +10,16 @@
     "pretest": "cross-env NODE_ENV=test  npm run db:migrate:test && npm run seed:test",
     "seed:test": "cross-env NODE_ENV=test npx sequelize-cli db:seed:all",
     "db:migrate:test": "cross-env NODE_ENV=test npx sequelize-cli db:migrate",
-    "db:migrate": "cross-env NODE_ENV=production npx sequelize-cli db:migrate",
+    "db:migrate:dev": "cross-env NODE_ENV=development npx sequelize-cli db:migrate",
+    "db:migrate:prod": "cross-env NODE_ENV=production npx sequelize-cli db:migrate",
     "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
     "db:create": "npx sequelize-cli db:create",
     "db:drop": "npx sequelize-cli db:drop",
     "db:reset:test": "cross-env NODE_ENV=test npx sequelize-cli db:migrate:undo:all",
-    "db:reset": "cross-env NODE_ENV=production npx sequelize-cli db:migrate:undo:all",
-    "db:seed:dev": "cross-env NODE_ENV=production npx sequelize-cli db:seed:all"
+    "db:reset:prod": "cross-env NODE_ENV=production npx sequelize-cli db:migrate:undo:all",
+    "db:reset:dev": "cross-env NODE_ENV=development npx sequelize-cli db:migrate:undo:all",
+    "db:seed:dev": "cross-env NODE_ENV=development npx sequelize-cli db:seed:all",
+    "db:seed:prod": "cross-env NODE_ENV=production npx sequelize-cli db:seed:all"
   },
   "keywords": [
     "payment"
