@@ -67,7 +67,7 @@ class PayoutService {
         // Initiate payout
         // console.log({ channel });
         transaction.provider = channel.id;
-        transaction.reference = "SKYBUUDDY"+transaction.id;
+        transaction.reference = `${process.env.SQUAD_MERCHANT_ID}-${transaction.id}`;
         const { error, data } = await this.initiatePayout({
           narration,
           amount,
@@ -82,6 +82,12 @@ class PayoutService {
         }
         transaction.status = TRANSACTION.STATUS.SUCCESS;
         await transaction.save();
+        const wall = await Wallets.findOne({where: {userId: recipientId}});
+        if(wall){
+          console.log({wall})
+        }
+        wall.balance -= amount;
+        await wall.save();
         return {
           data: {
             message: "Payout approved and initiated successfully",
