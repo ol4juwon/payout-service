@@ -66,7 +66,7 @@
 - [Home](https://vend-payout.onrender.com)
 - [Api v1 Base URl](https://vend-payout.onrender.com/api/v1)
 - [Frontend app](https://payout-service-fe.vercel.app/)
-- [Postman Doc](https://api.postman.com/collections/14081034-0774abd2-41fc-4664-9675-2af7444c6472?access_key=PMAT-01HTMZ2QYS4T08H74725XZWEZG)
+- [Postman Doc](https://api.postman.com/collections/14081034-0774abd2-41fc-4664-9675-2af7444c6472?access_key=) please request for a key
   
 ## Installation instructions
 
