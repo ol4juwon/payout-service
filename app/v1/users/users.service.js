@@ -107,7 +107,7 @@ exports.getOneUser = async (userId) => {
 
 exports.createUser = async ({ email, firstName, lastName, role }) => {
   try {
-    const exisitngUser = await Users.findOne({ where: { email } });
+    const exisitngUser = await Users.findOne({ where: { email: email.toLowerString() } });
     if (exisitngUser) {
       return { error: `user with email ${email} already exists`, code: 400 };
     }
@@ -118,7 +118,7 @@ exports.createUser = async ({ email, firstName, lastName, role }) => {
 
       const user = await Users.create(
         {
-          email,
+          email: email.toLowerString(),
           firstName,
           lastName,
           password: hashedPassword,
